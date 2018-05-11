@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clubank.position.monitor.mapper.MonitorMapper">
+	<resultMap id="HoleResultMap" type="com.clubank.position.monitor.entity.PassingHole">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="terminal_no" jdbcType="VARCHAR" property="terminalNo" />
+		<result column="ball_hole_id" jdbcType="BIGINT" property="ballHoleId" />
+		<result column="time" jdbcType="TIMESTAMP" property="time" />
+		<!-- 关联信息（球洞表） -->
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	
+	<select id="selectHoleInfoByTerminalNo" parameterType="java.lang.String"
+		resultMap="HoleResultMap">
+		select
+			t1.id,t1.terminal_no,t1.ball_hole_id,t1.time,t2.location,t2.name
+		from car_passing_hole t1,keypoint t2
+		where t1.ball_hole_id = t2.id
+		and t2.type=1
+		and t1.terminal_no = #{terminalNo,jdbcType=VARCHAR}
+		and t1.statue = 0 
+		order by t1.time
+	</select>
+	
+	<resultMap id="DriveResultMap" type="com.clubank.position.manager.course.entity.LatLng">
+		<result column="latitude" jdbcType="FLOAT" property="lat" />
+		<result column="longitude" jdbcType="FLOAT" property="lng" />
+	</resultMap>
+	
+	<select id="selectDriveInfoByCarId" parameterType="java.lang.String"
+		resultMap="DriveResultMap">
+		select latitude,longitude
+		from gps_locations
+		where terminal_no = #{terminalId,jdbcType=VARCHAR}
+		and time> DATE_SUB(NOW(),INTERVAL  1 HOUR); 
+	</select>
+	
+	<resultMap id="CarsMap" type="com.clubank.position.manager.cart.entity.Car">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+	    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+	    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+	    <result column="car_no" jdbcType="VARCHAR" property="carNo" />
+	    <result column="terminal_no" jdbcType="VARCHAR" property="terminalNo" />
+	    <result column="status" jdbcType="INTEGER" property="status" />
+	    <result column="description" jdbcType="VARCHAR" property="description" />
+	    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+	    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	    <!-- 关联表 车辆类型名称 -->
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+  	</resultMap>
+  	
+  	<select id="searchCarByInfo" parameterType="java.lang.String"
+		resultMap="CarsMap">
+		select car.*,cate.name  
+		from car car left join car_category cate
+		on car.category_id = cate.id 
+		where car_no like CONCAT('%',#{info,jdbcType=VARCHAR},'%')
+	<!-- 	or terminal_no like '#{info,jdbcType=VARCHAR}' -->
+	</select>
+	
+	<resultMap id="KeypointMap" type="com.clubank.position.manager.keypoint.entity.Keypoint">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="golf_course_id" jdbcType="BIGINT" property="golfCourseId" />
+	    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+	    <result column="type" jdbcType="INTEGER" property="type" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="location" jdbcType="VARCHAR" property="location" />
+	    <result column="radius" jdbcType="REAL" property="radius" />
+	    <result column="status" jdbcType="INTEGER" property="status" />
+	    <result column="description" jdbcType="VARCHAR" property="description" />
+	    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+	    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	 </resultMap>
+	 
+	 <select id="searchKeypointByInfo" parameterType="java.lang.String"
+		resultMap="KeypointMap">
+		select * from keypoint 
+		where type=1
+		and name like CONCAT('%',#{info,jdbcType=VARCHAR},'%')
+	</select>
+	
+	<resultMap id="CarLocation" type="com.clubank.position.monitor.entity.CarLocation">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+	    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+	    <result column="car_no" jdbcType="VARCHAR" property="carNo" />
+	    <result column="terminal_no" jdbcType="VARCHAR" property="terminalNo" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="car_icon" jdbcType="VARCHAR" property="carIcon" />
+	    <result column="block_car_icon" jdbcType="VARCHAR" property="blockCarIcon" />
+	    <result column="back_car_icon" jdbcType="VARCHAR" property="backCarIcon" />
+	    <result column="warn_car_icon" jdbcType="VARCHAR" property="warnCarIcon" />
+	 </resultMap>
+	 
+	 <select id="getCarLocation" parameterType="java.lang.Long"
+		resultMap="CarLocation">
+		select 
+		    car.id, 
+		    car.customer_id, 
+		    car.category_id, 
+		    car.car_no, 
+		    car.terminal_no, 
+		    ccg.name,
+		    ccg.car_icon,
+		    ccg.block_car_icon,
+		    ccg.back_car_icon,
+		    ccg.warn_car_icon
+		    from car
+		    left join car_category ccg
+		    on car.category_id = ccg.id
+		  	where car.customer_id = #{customerId,jdbcType=BIGINT}
+	</select>
+	
+	<insert id="insertSelective" parameterType="com.clubank.position.monitor.entity.PassingHole">
+		insert into car_passing_hole
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="terminalNo != null">
+				terminal_no,
+			</if>
+			<if test="ballHoleId != null">
+				ball_hole_id,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+			<if test="statue != null">
+				statue
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="terminalNo != null">
+				#{terminalNo,jdbcType=BIGINT},
+			</if>
+			<if test="ballHoleId != null">
+				#{ballHoleId,jdbcType=BIGINT},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="statue != null">
+				#{statue,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
+	
+	 <update id="updatePassingHole">
+    	update car_passing_hole
+    	set statue = 1
+    	where terminal_no = #{terminalNo,jdbcType=VARCHAR}
+  	</update> 
+  	
+  	<!-- <update id="deletePassingHole">
+    	delete from car_passing_hole
+    	where terminal_no = #{terminalNo,jdbcType=VARCHAR}
+  	</update> -->
+  	
+  	<select id="selectTotal" resultType="Integer">
+	  	select count(0)
+	  	from car_passing_hole
+	  	where terminal_no = #{terminalNo,jdbcType=VARCHAR}
+	  	and ball_hole_id = #{ballHoleId,jdbcType=BIGINT}
+	  	and statue = 0 
+  	</select>
+	
+</mapper>

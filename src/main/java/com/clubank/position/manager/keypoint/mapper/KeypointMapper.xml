@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clubank.position.manager.keypoint.mapper.KeypointMapper">
+  <resultMap id="BaseResultMap" type="com.clubank.position.manager.keypoint.entity.Keypoint">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="golf_course_id" jdbcType="BIGINT" property="golfCourseId" />
+    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="radius" jdbcType="REAL" property="radius" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, golf_course_id, order_num, type, name, location, radius, status, description, 
+    remarks, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from keypoint
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from keypoint
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.clubank.position.manager.keypoint.entity.Keypoint">
+    insert into keypoint (id, golf_course_id, order_num, 
+      type, name, location, 
+      radius, status, description, 
+      remarks, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{golfCourseId,jdbcType=BIGINT}, #{orderNum,jdbcType=INTEGER}, 
+      #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, 
+      #{radius,jdbcType=REAL}, #{status,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.clubank.position.manager.keypoint.entity.Keypoint">
+    insert into keypoint
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="golfCourseId != null">
+        golf_course_id,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="radius != null">
+        radius,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="golfCourseId != null">
+        #{golfCourseId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="radius != null">
+        #{radius,jdbcType=REAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.clubank.position.manager.keypoint.entity.Keypoint">
+    update keypoint
+    <set>
+      <if test="golfCourseId != null">
+        golf_course_id = #{golfCourseId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="radius != null">
+        radius = #{radius,jdbcType=REAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.clubank.position.manager.keypoint.entity.Keypoint">
+    update keypoint
+    set golf_course_id = #{golfCourseId,jdbcType=BIGINT},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      radius = #{radius,jdbcType=REAL},
+      status = #{status,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+ 
+  <!-- 通过关键点类型查询、关键点名称模糊查询到的球场关键点个数 --> 
+  <select id="selectKeypointTotal" resultType="Integer">
+  	select count(0)
+  	from keypoint
+  	where golf_course_id = #{golfCourseId,jdbcType=BIGINT}
+  	<if test="type != null">
+  		and type = #{type,jdbcType=INTEGER}
+  	</if>
+  	<if test="name != null and name != ''">
+  		and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+  	</if>
+  </select>
+  
+  <!-- 通过关键点类型查询、关键点名称模糊查询到的球场关键点列表 -->
+  <select id="selectKeypointList" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from keypoint
+    where golf_course_id = #{golfCourseId,jdbcType=BIGINT}
+  	<if test="type != null">
+  		and type = #{type,jdbcType=INTEGER}
+  	</if>
+  	<if test="name != null and name != ''">
+  		and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+  	</if>
+  	order by create_time desc
+   	<if test="startIndex &gt; -1">
+   		limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+   	</if>
+  </select>
+  
+  <!-- 查询所有关键点信息-->
+  <select id="selectAllKeypointList" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from keypoint
+  </select>
+  
+  <!-- 通过名称查询球场关键点 -->
+  <select id="selectKeypointByName" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from keypoint
+    where golf_course_id = #{golfCourseId,jdbcType=BIGINT} and name = #{name,jdbcType=VARCHAR}
+  </select>
+</mapper>

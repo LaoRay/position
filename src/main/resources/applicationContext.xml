@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"    
+    xmlns:context="http://www.springframework.org/schema/context"    
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:redis="http://www.springframework.org/schema/redis"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans      
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd      
+                        http://www.springframework.org/schema/context      
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd      
+                        http://www.springframework.org/schema/mvc      
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/aop
+	              		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	              		http://www.springframework.org/schema/tx
+	              		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	              		http://www.springframework.org/schema/redis
+	              		http://www.springframework.org/schema/redis/spring-redis-1.0.xsd">
+        
+    <!-- 自动扫描 -->
+    <!-- 会自动扫描com.clubank.position下的所有包，包括子包下除了@Controller的类。 -->    
+    <context:component-scan base-package="com.clubank.position">
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+                 
+    <!-- 加载配置文件 -->
+	<context:property-placeholder location="classpath:config/*.properties" />
+	
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">    
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.maxActive}"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}"></property>
+    </bean>    
+    
+    <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->    
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">    
+        <property name="dataSource" ref="dataSource" />    
+        <!-- 自动扫描mapping.xml文件 -->    
+        <property name="mapperLocations" value="com.clubank.position.**.mapper/*.xml"></property>    
+    </bean>
+    
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">    
+        <!--basePackage指定要扫描的包，在此包之下的映射器都会被搜索到。可指定多个包，包与包之间用逗号或分号分隔-->    
+        <property name="basePackage" value="com.clubank.position.**.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>    
+    </bean>    
+        
+    <!-- 配置spring的事务管理器  (事务管理)transaction manager, use JtaTransactionManager for global tx -->    
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">    
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!--通过标签定义事务增强，并制定事务管理器  -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+    	<!--定义属性，声明事务规则 -->
+    	<tx:attributes>
+	        <tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 切面配置 -->
+    <aop:config>
+        <aop:pointcut id="serviceMethod" expression="execution(* com.clubank.position.*.**.service..*.*(..))"/>
+        <!-- 将事务增强与切入点组合（织入事务切面） -->
+        <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice"/>
+    </aop:config>
+	
+	<!-- 配置redis连接信息 -->
+	<bean id="jedisClientPool" class="com.clubank.position.common.redis.JedisClientPool">
+		<property name="jedisPool" ref="jedisPool"></property>
+	</bean>
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg name="host" value="${redis.host}" />
+		<constructor-arg name="port" value="${redis.port}" />
+	</bean>
+	
+</beans>

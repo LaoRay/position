@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clubank.position.manager.cart.mapper.CarMapper">
+  <resultMap id="BaseResultMap" type="com.clubank.position.manager.cart.entity.Car">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="car_no" jdbcType="VARCHAR" property="carNo" />
+    <result column="terminal_no" jdbcType="VARCHAR" property="terminalNo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, customer_id, order_num, category_id, car_no, terminal_no, status, description, 
+    remarks, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from car
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.clubank.position.manager.cart.entity.Car">
+    insert into car (id, customer_id, order_num, 
+      category_id, car_no, terminal_no, 
+      status, description, remarks, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{orderNum,jdbcType=INTEGER}, 
+      #{categoryId,jdbcType=BIGINT}, #{carNo,jdbcType=VARCHAR}, #{terminalNo,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.clubank.position.manager.cart.entity.Car">
+    insert into car
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="carNo != null">
+        car_no,
+      </if>
+      <if test="terminalNo != null">
+        terminal_no,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="carNo != null">
+        #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalNo != null">
+        #{terminalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.clubank.position.manager.cart.entity.Car">
+    update car
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null">
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="carNo != null">
+        car_no = #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="terminalNo != null">
+        terminal_no = #{terminalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.clubank.position.manager.cart.entity.Car">
+    update car
+    set customer_id = #{customerId,jdbcType=BIGINT},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=BIGINT},
+      car_no = #{carNo,jdbcType=VARCHAR},
+      terminal_no = #{terminalNo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 查询某一类型下的车辆 -->
+  <select id="selectCarByCategoryId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from car
+    where category_id = #{categoryId,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 含模糊查询获得车辆列表个数 -->
+  <select id="selectCarTotal" resultType="Integer">
+  	select count(0)
+  	from car
+  	where customer_id = #{customerId,jdbcType=BIGINT}
+  	<if test="categoryId != null and categoryId != ''">
+  		and category_id = #{categoryId,jdbcType=BIGINT}
+  	</if>
+  	<if test="carNo != null and carNo != ''">
+  		and car_no like concat('%',#{carNo,jdbcType=VARCHAR},'%')
+  	</if>
+  	<if test="terminalNo != null and terminalNo != ''">
+  		and terminal_no like concat('%',#{terminalNo,jdbcType=VARCHAR},'%')
+  	</if>
+  </select>
+  
+  <!-- 含模糊查询获得车辆列表并分页 -->
+  <select id="selectCarList" resultType="HashMap">
+  	select 
+    car.id, 
+    car.customer_id AS customerId, 
+    car.order_num AS orderNum, 
+    car.category_id AS categoryId, 
+    car.car_no AS carNo, 
+    car.terminal_no AS terminalNo, 
+    car.status, 
+    car.description, 
+    car.remarks, 
+    car.create_time AS createTime, 
+    car.update_time AS updateTime,
+    ccg.name AS categoryName
+    from car
+    left join car_category ccg
+    on car.category_id = ccg.id
+    where car.customer_id = #{customerId,jdbcType=BIGINT}
+  	<if test="categoryId != null and categoryId != ''">
+  		and car.category_id = #{categoryId,jdbcType=BIGINT}
+  	</if>
+  	<if test="carNo != null and carNo != ''">
+  		and car.car_no like concat('%',#{carNo,jdbcType=VARCHAR},'%')
+  	</if>
+  	<if test="terminalNo != null and terminalNo != ''">
+  		and car.terminal_no like concat('%',#{terminalNo,jdbcType=VARCHAR},'%')
+  	</if>
+  	order by car.create_time desc
+  	<if test="startIndex &gt; -1">
+  		limit #{startIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  	</if>
+  </select>
+  
+  <!-- 通过车辆编号查询车辆 -->
+  <select id="selectCarByCarNo" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from car
+    where customer_id = #{customerId,jdbcType=BIGINT} and car_no = #{carNo,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 通过终端编号查询车辆 -->
+  <select id="selectCarByTerminalNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from car
+    where terminal_no = #{terminalNo,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询车辆信息 -->
+  <select id="selectCarInfo" parameterType="java.lang.Long" resultType="HashMap">
+  	select 
+    car.id, 
+    car.customer_id AS customerId, 
+    car.order_num AS orderNum, 
+    car.category_id AS categoryId, 
+    car.car_no AS carNo, 
+    car.terminal_no AS terminalNo, 
+    car.status, 
+    car.description, 
+    car.remarks, 
+    car.create_time AS createTime, 
+    car.update_time AS updateTime,
+    ccg.name AS categoryName
+    from car
+    left join car_category ccg
+    on car.category_id = ccg.id
+  	where car.id = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clubank.position.manager.location.mapper.GpsLocationsMapper">
+  <resultMap id="BaseResultMap" type="com.clubank.position.manager.location.entity.GpsLocations">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="terminal_no" jdbcType="VARCHAR" property="terminalNo" />
+    <result column="longitude" jdbcType="DOUBLE" property="longitude" />
+    <result column="latitude" jdbcType="DOUBLE" property="latitude" />
+    <result column="elevation" jdbcType="INTEGER" property="elevation" />
+    <result column="speed" jdbcType="DOUBLE" property="speed" />
+    <result column="direction" jdbcType="INTEGER" property="direction" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, terminal_no, longitude, latitude, elevation, speed, direction, time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gps_locations
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from gps_locations
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.clubank.position.manager.location.entity.GpsLocations">
+    insert into gps_locations (id, terminal_no, longitude, 
+      latitude, elevation, speed, 
+      direction, time)
+    values (#{id,jdbcType=BIGINT}, #{terminalNo,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
+      #{latitude,jdbcType=DOUBLE}, #{elevation,jdbcType=INTEGER}, #{speed,jdbcType=DOUBLE}, 
+      #{direction,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertBatch" parameterType="list">
+    insert into gps_locations (id, terminal_no, latitude, 
+      longitude, elevation, speed, 
+      direction, time)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( 
+      #{item.id,jdbcType=BIGINT}, #{item.terminalNo,jdbcType=VARCHAR}, #{item.latitude,jdbcType=REAL}, 
+      #{item.longitude,jdbcType=REAL}, #{item.elevation,jdbcType=INTEGER}, #{item.speed,jdbcType=REAL}, 
+      #{item.direction,jdbcType=INTEGER}, #{item.time,jdbcType=TIMESTAMP}
+    )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.clubank.position.manager.location.entity.GpsLocations">
+    insert into gps_locations
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="terminalNo != null">
+        terminal_no,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="elevation != null">
+        elevation,
+      </if>
+      <if test="speed != null">
+        speed,
+      </if>
+      <if test="direction != null">
+        direction,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="terminalNo != null">
+        #{terminalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="elevation != null">
+        #{elevation,jdbcType=INTEGER},
+      </if>
+      <if test="speed != null">
+        #{speed,jdbcType=DOUBLE},
+      </if>
+      <if test="direction != null">
+        #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.clubank.position.manager.location.entity.GpsLocations">
+    update gps_locations
+    <set>
+      <if test="terminalNo != null">
+        terminal_no = #{terminalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="elevation != null">
+        elevation = #{elevation,jdbcType=INTEGER},
+      </if>
+      <if test="speed != null">
+        speed = #{speed,jdbcType=DOUBLE},
+      </if>
+      <if test="direction != null">
+        direction = #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.clubank.position.manager.location.entity.GpsLocations">
+    update gps_locations
+    set terminal_no = #{terminalNo,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      elevation = #{elevation,jdbcType=INTEGER},
+      speed = #{speed,jdbcType=DOUBLE},
+      direction = #{direction,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans      
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd      
+                        http://www.springframework.org/schema/context      
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                        http://www.springframework.org/schema/aop
+	              		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd     
+                        http://www.springframework.org/schema/mvc      
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 加载配置文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 注解：启动mvc扫描，设置返回编码 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes" value="text/json;charset=UTF-8"></property>
+			</bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="features">
+                	<list>
+                		<value>WriteDateUseDateFormat</value>
+                	</list>
+                </property>
+            </bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 对web包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
+	<!-- 只扫描base-package下的用Controller注解的类。 -->
+	<context:component-scan base-package="com.clubank.position">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<!-- 加上这句让SpringMVC管理的时候排除Service层，避免事务失效的问题。 --> 
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" /> 
+	</context:component-scan>
+
+	<!-- 配置mvc的拦截器 可以配置多个 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 需要被拦截的路径 -->
+			<mvc:mapping path="/**" />
+		
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/logout" />
+			<mvc:exclude-mapping path="/webSocketServer" />
+	   <!-- <mvc:exclude-mapping path="/course/imageUpload" />
+			<mvc:exclude-mapping path="/imageUpload" /> -->
+			<mvc:exclude-mapping path="/image/**" />
+			<mvc:exclude-mapping path="/gps/data" />
+			<!-- 拦截处理的interceptor -->
+			<bean class="com.clubank.position.common.interceptor.PosCheckInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- 文件大小最大值:单位Byte(字节)100M=100*1024*1024=104857600（Byte） -->
+		<property name="maxUploadSize" value="104857600" />
+		<!-- 内存中的最大值 -->
+		<property name="maxInMemorySize" value="40960" />
+		<!-- 启用是为了推迟文件解析，以便捕获文件大小异常 -->
+		<property name="resolveLazily" value="true" />
+	</bean>
+
+	<!-- 切面 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+</beans>

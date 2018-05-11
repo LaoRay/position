@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clubank.position.manager.course.mapper.CourseInfoMapper">
+
+	<resultMap id="BaseResultMap" type="com.clubank.position.manager.course.entity.Course">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="customer_id" jdbcType="BIGINT" property="customer_id" />
+		<result column="order_num" jdbcType="INTEGER" property="order_num" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="border_locations" jdbcType="VARCHAR" property="borderLocations" />
+		<result column="focus" jdbcType="VARCHAR" property="focus" />
+		<result column="course_image" jdbcType="VARCHAR" property="courseImage" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,customer_id,order_num,name,border_locations,course_image,focus,course_image,status,type,description,remarks,create_time,update_time 
+	</sql>
+	
+	<select id="selectCourseList" resultMap="BaseResultMap">
+  		select 
+		<include refid="Base_Column_List" />
+    	from golf_course
+    	where 1 = 1 
+		<if test="customerId != null and customerId != ''">
+   		and customer_id = #{customerId,jdbcType=BIGINT}
+		</if>
+   		order by type
+	</select>
+
+	<!-- 通过应用名称获得应用信息 -->
+	<select id="selectCourseInfoByAppName" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from golf_course
+		where name = #{name,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 通过应用名称获得应用信息 -->
+	<select id="selectCourseInfoById" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from golf_course
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<insert id="insertSelective" parameterType="com.clubank.position.manager.course.entity.Course" useGeneratedKeys="true" keyProperty="id">
+		insert into golf_course
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="customer_id != null">
+				customer_id,
+			</if>
+			<if test="order_num != null">
+				order_num,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="borderLocations != null">
+				border_locations,
+			</if>
+			<if test="focus != null">
+				focus,
+			</if>
+			<if test="courseImage != null">
+				course_image,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="customer_id != null">
+				#{customer_id,jdbcType=BIGINT},
+			</if>
+			<if test="order_num != null">
+				#{order_num,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="borderLocations != null">
+				#{borderLocations,jdbcType=VARCHAR},
+			</if>
+			<if test="focus != null">
+				#{focus,jdbcType=VARCHAR},
+			</if>
+			<if test="courseImage != null">
+				#{course_image,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKey">
+    	update golf_course
+    	set 
+    		<if test="name != null">
+    		name = #{name,jdbcType=VARCHAR},
+    		</if>
+    		<if test="borderLocations != null">
+    		border_locations = #{borderLocations,jdbcType=VARCHAR},
+    		</if>
+    		<if test="fileLocation != null">
+    		course_image = #{fileLocation,jdbcType=VARCHAR},
+    		</if>
+      		update_time = #{updateTime,jdbcType=TIMESTAMP}
+    	where id = #{id,jdbcType=BIGINT}
+  	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from golf_course
+    where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	<select id="getAllCourse" resultMap="BaseResultMap">
+  		select 
+		<include refid="Base_Column_List" />
+    	from golf_course
+    	where 1 = 1 
+		<if test="customerId != null and customerId != ''">
+   		and customer_id = #{customerId,jdbcType=BIGINT}
+		</if>
+		and type=1 
+   		order by type
+	</select>
+
+</mapper>
